@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: themis
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: pdpserver
+  namespace: themis
+  labels:
+    app: pdpserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pdpserver
+  template:
+    metadata:
+      labels:
+        app: pdpserver
+    spec:
+      containers:
+      - name: pdpserver
+        image: $THEMIS_REGISTRY/pdpserver
+        imagePullPolicy: Always
+        args: [ "pdpserver", "-v", "3", "-p", "/contacts-api-policy.yaml" ]
+        ports:
+        - containerPort: 5555
+          name: pdp
+          protocol: TCP
+        - containerPort: 5554
+          name: pap
+          protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pdp
+  namespace: themis
+# labels:
+#   app: pdp
+spec:
+  selector:
+    app: pdpserver
+  ports:
+  - name: pdp
+    port: 5555
+    protocol: TCP
+  - name: pap
+    port: 5554
+    protocol: TCP
+
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: pap
+#  namespace: themis
+## labels:
+##   app: pap
+#spec:
+#  selector:
+#    app: pdpserver
+#  ports:
+#  - name: pap
+#    port: 5554
+#    protocol: TCP
+

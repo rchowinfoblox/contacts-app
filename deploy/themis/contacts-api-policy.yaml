@@ -1,0 +1,43 @@
+# Themis pdpserver policy for contacts-app
+
+attributes:
+  user: string
+  operation: string
+
+policies:
+  id: "Contacts API Policy"
+  alg: FirstApplicableEffect
+  policies:
+  - alg: FirstApplicableEffect
+    target: # operation == "read"
+    - equal:
+      - attr: operation
+      - val:
+          type: string
+          content: "read"
+    policies:
+    - alg: FirstApplicableEffect
+      rules:
+      - effect: Permit
+  - alg: FirstApplicableEffect
+    target: # operation == "write"
+    - equal:
+      - attr: operation
+      - val:
+          type: string
+          content: "write"
+    policies:
+    - alg: FirstApplicableEffect
+      rules:
+      - condition: # user == "sysadmin"
+          equal:
+          - attr: user
+          - val:
+              type: string
+              content: "sysadmin"
+        effect: Permit
+      - effect: Deny
+# - alg: FirstApplicableEffect
+#   rules:
+#   - effect: Deny
+

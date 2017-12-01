@@ -1,0 +1,31 @@
+# pepcli test requests for contacts-app Themis pdpserver policy
+
+attributes:
+  user: string
+  operation: string
+
+requests:
+# Not Applicable because unknown operation
+- user: "regularjoe"
+  operation: "bogus"
+
+# Not Applicable because unknown operation
+- user: "sysadmin"
+  operation: "bogus"
+
+# Read Permitted for any user
+- user: "regularjoe"
+  operation: "read"
+
+# Read Permitted for any user
+- user: "sysadmin"
+  operation: "read"
+
+# Write Denied user other than "sysadmin"
+- user: "regularjoe"
+  operation: "write"
+
+# Write Permitted for user "sysadmin"
+- user: "sysadmin"
+  operation: "write"
+
